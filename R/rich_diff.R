@@ -7,17 +7,20 @@
 #' diffs of two commits of a single R Markdown document on a GitHub repo. Will
 #' work on whatever branch is currently checked out.
 #' @param gh_file_path path to the file to compare. Eg a .rmd or .qmd
+#' @param wch_commits A vector of two numbers where 1 is HEAD. The first number
+#'   is the more recent commit and the second is the older commit to compare it
+#'   to. Use `git2r::commits()` to see all the commits available.
 #'
 #' @return Viewer opens with diff highlighting individual word differences.
 #' @export
 #'
 #' @examples
-rich_diff <- function(gh_file_path){
+rich_diff <- function(gh_file_path, wch_commits = c(1,2)){
 
 
-  commit_shas <- git2r::commits(n=2)
-  commit_1_sha <- commit_shas[[1]]$sha
-  commit_2_sha <- commit_shas[[2]]$sha
+  commit_shas <- git2r::commits(n=max(wch_commits))
+  commit_1_sha <- commit_shas[[wch_commits[1]]]$sha
+  commit_2_sha <- commit_shas[[wch_commits[2]]]$sha
 
 
   # consrtruct the terminal commands using the SHA of the commits we want to
